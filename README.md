@@ -25,8 +25,18 @@ Using this we can also plug <b>&beta;</b> back in to get a explicit formula for 
 
 Linear regression does an decent job, but there is certainly room to improve this model, particularly with lower weights where the trend appears more quadratic rather than linear.
 
-### Adding Weights
+### Adding Weights to the Regression Equation
 
-To fit a better model to this data, we can employ <b>Weighted Linear Regression (LOWESS)</b>, which is similar to the technique above, but allows for curvature by performing linear regression over very small portions of the data that collectively create a curved, better fit model.
+To fit a better model to this data, we can employ <b>Weighted Linear Regression (LOWESS)</b>, which is similar to the technique above, but allows for curvature by performing linear regression over very small portions of the data that collectively create a curved, better fit model. To do this, we now use a matrix of weights (more on this later) that determines how important values will be to the given prediction. To represent this mathematically, we begin with the same regression equation as before and then multiply by <b>W</b> which is our matrix of weights: 
 
-### 
+<p align="center">
+  <b>Wy</b> = <b>WX&beta;</b>+<b>W&epsilon;</b>
+  <br>
+  <b>X<sup>T</sup>Wy</b> = <b>X<sup>T</sup>WX&beta;</b>+<b>X<sup>T</sup>&epsilon;</b> = <b>X<sup>T</sup>WX&beta;</b>
+  <br>
+  <b>(X<sup>T</sup>WX)<sup>-1</sup>X<sup>T</sup>Wy</b> = <b>&beta;</b>
+</p>
+
+This leads to a seemingly similar result, but as we will explore below these weights have major implications for the fitted model.
+
+### Applying Weighted Linear Regression
