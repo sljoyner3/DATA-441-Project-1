@@ -19,8 +19,14 @@ Where <b>y</b> is the vector of outputs, with <b>x</b> as the vector of inputs, 
 
 Using this we can also plug <b>&beta;</b> back in to get a explicit formula for <b>y</b>, our predictions. As the name suggests, this technique works great for linear datasets. The following example shows the relationship between car weight and mileage, and the line in blue is a standard linear regression, done with the technqiue described above, that attempts to predict miles per gallon based off weight.
 
-![](relative/path/to/img.jpg?raw=true "Title")
+<p align="center">
+<img src=WGT_MPG_Linear_Regression-2.png>
+</p>
+
+Linear regression does an decent job, but there is certainly room to improve this model, particularly with lower weights where the trend appears more quadratic rather than linear.
 
 ### Adding Weights
+
+To fit a better model to this data, we can employ <b>Weighted Linear Regression (LOWESS)</b>, which is similar to the technique above, but allows for curvature by performing linear regression over very small portions of the data that collectively create a curved, better fit model.
 
 ### 
