@@ -53,6 +53,10 @@ Using these kernels to determine the weight matrix, we can now begin to compute 
   <b>Import code - original/scikitlearn </b>
 </p>
 
+```Python
+import numpy as np
+```
+
 From this code we can obtain the following fitted model, using the same data as before.
 
 <p align='center'>
