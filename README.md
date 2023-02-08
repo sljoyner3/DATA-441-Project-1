@@ -43,22 +43,20 @@ This leads to a seemingly similar result, but as we will explore below these wei
 
 The obvious question becomes how to determine the proper weights, and this is done through kernels that determine the weights and a hyperparameter that specifies the width of the kernel. All of the points that have a nonzero weight make up a neighborhood, and from each neighborhood a linear regression is made, and all of these collectively make up the nonlinear model. Examples of kernels include the Gaussian and Epanechnikov kernels, seen below.
 
-<p>
+<p align='center'>
   <b>Import kernel graphs </b>
 </p>
 
 Using these kernels to determine the weight matrix, we can now begin to compute models using the weighted linear regression approach. The code below shows how to run these sets of small linear regressions to make the overall model using the weighted approach.
 
-<p>
+<p align='center'>
   <b>Import code - original/scikitlearn </b>
 </p>
 
 From this code we can obtain the following fitted model, using the same data as before.
 
-<p>
+<p align='center'>
   <b>Import plot/model </b>
 </p>
 
 Clearly, this model fits the data better than the standard linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. 
-
-###
