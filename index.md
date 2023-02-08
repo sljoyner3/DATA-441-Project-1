@@ -41,9 +41,9 @@ The obvious question becomes how to determine the proper weights, and this is do
 
 <p align='center'>
   <div class='row' max-width = '90%'>
-      <img src='Gaussian Kernel Mean 0 Tau _25.png' style='width: 32%' align='left'>
-      <img src='Epanechnikov Kernel Mean 0 Tau _25.png' style='width: 32%' align='center'>
-      <img src='Tricubic Kernel Mean 0 Tau _25.png' style='width: 32%' align='right'>
+      <img src='Gaussian Kernel Mean 0 Tau _25.png' style='width: 30%' align='left'>
+      <img src='Epanechnikov Kernel Mean 0 Tau _25.png' style='width: 30%' align='center'>
+      <img src='Tricubic Kernel Mean 0 Tau _25.png' style='width: 30%' align='right'>
   </div>
 </p>
 
@@ -51,7 +51,7 @@ What locally weighted linear regression does is iterate over the data and for ev
 
 ### Applying Weighted Linear Regression
 
-Having explained the math and concepts behind locally weighted linear regression, we can now begin to compute models with this approach. The code below shows how to run these sets of small linear regressions to make the overall model using the weighted approach.
+Having explained the math and concepts behind locally weighted linear regression, we can now begin to develop code to create models using this approach. The code below shows how to run these sets of small linear regressions to make the overall model using the weighted approach.
 
 ```Python
 import numpy as np
@@ -63,4 +63,4 @@ From this code we can obtain the following fitted model, using the same data as 
   <b>Import plot/model with standard/reasonable parameters </b>
 </p>
 
-Clearly, this model fits the data better than the standard linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. The ______ kernel appears to work best
+Clearly, this model fits the data better than the standard linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. The ______ kernel appears to work best, so we can begin further testing and validation to tune our model.
