@@ -37,30 +37,26 @@ To fit a better model to this data, we can employ <b>Locally Weighted Linear Reg
   <b>(X<sup>T</sup>WX)<sup>-1</sup>X<sup>T</sup>Wy</b> = <b>&beta;</b>
 </p>
 
-This leads to a seemingly similar result, but as we will explore below these weights have major implications for the fitted model.
-
-### Applying Weighted Linear Regression
-
-The obvious question becomes how to determine the proper weights, and this is done through kernels that determine the weights and a hyperparameter that specifies the width of the kernel. All of the points that have a nonzero weight make up a neighborhood, and from each neighborhood a linear regression is made, and all of these collectively make up the nonlinear model. Examples of kernels include the Gaussian and Epanechnikov kernels, seen below.
+The obvious question becomes how to determine the proper weights, and this is done through kernels that determine the weights and a hyperparameter that specifies the width of the kernel. All of the points that have a nonzero weight make up a neighborhood, and from each neighborhood a linear regression is made, and all of these collectively make up the nonlinear model. Examples of kernels include the Gaussian, Tricubic, and Epanechnikov kernels, seen below.
 
 <p align='center'>
   <b>Import kernel graphs </b>
 </p>
 
-Using these kernels to determine the weight matrix, we can now begin to compute models using the weighted linear regression approach. The code below shows how to run these sets of small linear regressions to make the overall model using the weighted approach.
+What locally weighted linear regression does is iterate over the data and for every point it applies the weights to nearby kernels, according to the choosen kernel and width, and creates the neighborhood that creates a small linear regression that combines with the others to create a nonlinear model.
 
-<p align='center'>
-  <b>Import code - original/scikitlearn </b>
-</p>
+### Applying Weighted Linear Regression
+
+Having explained the math and concepts behind locally weighted linear regression, we can now begin to compute models with this approach. The code below shows how to run these sets of small linear regressions to make the overall model using the weighted approach.
 
 ```Python
 import numpy as np
 ```
 
-From this code we can obtain the following fitted model, using the same data as before.
+From this code we can obtain the following fitted model, using the same data as before. The three plots below show a locally weighted linear regression model for the car weight and mileage data for three different kernels.
 
 <p align='center'>
-  <b>Import plot/model </b>
+  <b>Import plot/model with standard/reasonable parameters </b>
 </p>
 
-Clearly, this model fits the data better than the standard linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. 
+Clearly, this model fits the data better than the standard linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. The ______ kernel appears to work best
