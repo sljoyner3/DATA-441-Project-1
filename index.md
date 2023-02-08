@@ -41,9 +41,9 @@ The obvious question becomes how to determine the proper weights, and this is do
 
 <p align='center'>
   <div class='row'>
-      <img src='Gaussian Kernel Mean 0 Tau _25-2.png' style='width: 30%' align='left'>
-      <img src='Epanechnikov Kernel Mean 0 Tau _25-2.png' style='width: 30%' align='center'>
-      <img src='Tricubic Kernel Mean 0 Tau _25-2.png' style='width: 30%' align='right'>
+      <img src='Gaussian Kernel Mean 0 Tau _25-2.png' style='width: 31%' align='left'>
+      <img src='Epanechnikov Kernel Mean 0 Tau _25-2.png' style='width: 31%' align='center'>
+      <img src='Tricubic Kernel Mean 0 Tau _25-2.png' style='width: 31%' align='right'>
   </div>
 </p>
 
