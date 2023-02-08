@@ -39,7 +39,7 @@ To fit a better model to this data, we can employ <b>Locally Weighted Linear Reg
 
 The obvious question becomes how to determine the proper weights, and this is done through kernels that determine the weights and a hyperparameter that specifies the width of the kernel. All of the points that have a nonzero weight make up a neighborhood, and from each neighborhood a linear regression is made, and all of these collectively make up the nonlinear model. Examples of kernels include the Gaussian, Tricubic, and Epanechnikov kernels, seen below.
 
-<p align='center'>
+<p>
   <div class='row'>
       <img src='Gaussian Kernel Mean 0 Tau _25-2.png' style='width: 31%' align='left'>
       <img src='Epanechnikov Kernel Mean 0 Tau _25-2.png' style='width: 31%' align='center'>
