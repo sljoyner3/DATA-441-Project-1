@@ -27,7 +27,7 @@ Linear regression does an decent job, but there is certainly room to improve thi
 
 ### Adding Weights to the Regression Equation
 
-To fit a better model to this data, we can employ <b>Weighted Linear Regression (LOWESS)</b>, which is similar to the technique above, but allows for curvature by performing linear regression over very small portions of the data that collectively create a curved, better fit model. To do this, we now use a matrix of weights (more on this later) that determines how important values will be to the given prediction. To represent this mathematically, we begin with the same regression equation as before and then multiply by <b>W</b> which is our matrix of weights: 
+To fit a better model to this data, we can employ <b>Locally Weighted Linear Regression (LOWESS)</b>, which is similar to the technique above, but allows for curvature by performing linear regression over very small portions of the data that collectively create a curved, better fit model. To do this, we now use a matrix of weights (more on this later) that determines how important values will be to the given prediction. To represent this mathematically, we begin with the same regression equation as before and then multiply by <b>W</b>, which is a matrix containing weights along the diagonal and zeros everywhere else: 
 
 <p align="center">
   <b>Wy</b> = <b>WX&beta;</b>+<b>W&epsilon;</b>
@@ -40,3 +40,25 @@ To fit a better model to this data, we can employ <b>Weighted Linear Regression 
 This leads to a seemingly similar result, but as we will explore below these weights have major implications for the fitted model.
 
 ### Applying Weighted Linear Regression
+
+The obvious question becomes how to determine the proper weights, and this is done through kernels that determine the weights and a hyperparameter that specifies the width of the kernel. All of the points that have a nonzero weight make up a neighborhood, and from each neighborhood a linear regression is made, and all of these collectively make up the nonlinear model. Examples of kernels include the Gaussian and Epanechnikov kernels, seen below.
+
+<p>
+  <b>Import kernel graphs </b>
+</p>
+
+Using these kernels to determine the weight matrix, we can now begin to compute models using the weighted linear regression approach. The code below shows how to run these sets of small linear regressions to make the overall model using the weighted approach.
+
+<p>
+  <b>Import code - original/scikitlearn </b>
+</p>
+
+From this code we can obtain the following fitted model, using the same data as before.
+
+<p>
+  <b>Import plot/model </b>
+</p>
+
+Clearly, this model fits the data better than the standard linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. 
+
+###
