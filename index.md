@@ -107,10 +107,68 @@ def Tricubic(x):
   return np.where(d>1,0,70/81*(1-d**3)**3)
 ```
 
-We can use this method to employee these three kernels with a specified value of tau. The plot below shows the locally weighted linear regression for the car weight and mileage data from before. The gray dots represent the data, and each line represents a model using the specified kernel.
+We can employee these three kernels to generate a new nonlinear model with a specified value of tau. The code below shows the use of the previous function and generation of the plot below, which shows the locally weighted linear regression for the car weight and mileage data from before. The gray dots represent the data, and each line represents a model using the specified kernel.
+
+```Python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+cars = pd.read_csv('/content/cars.csv')
+x = np.array(cars['WGT'])
+y = np.array(cars['MPG'])
+gaussian = locally_weighted_linear_regression(x,y,'Gaussian',tau=1)
+epanenchnikov = locally_weighted_linear_regression(x,y,'Epanechnikov',tau=1)
+tricubic = locally_weighted_linear_regression(x,y,'Tricubic',tau=1)
+
+plt.figure(figsize=[14,8])
+plt.scatter(cars['WGT'],cars['MPG'], color = 'gray', alpha=.5)
+plt.plot(x[np.argsort(x)][::-1],tricubic[np.argsort(tricubic)], linewidth = 3, alpha=.75,color='red', label = 'Tricubic Kernel, tau=1')
+plt.plot(x[np.argsort(x)][::-1],epanenchnikov[np.argsort(epanenchnikov)], linewidth = 3, alpha=.75,color='green',label='Epanenchnikov Kernel, tau=1')
+plt.plot(x[np.argsort(x)][::-1],gaussian[np.argsort(gaussian)], linewidth = 3, alpha=.75, label = 'Gaussian Kernel, tau=1')
+plt.ylabel('Miles Per Gallon (mi)')
+plt.xlabel('Weight (lbs)')
+plt.title('Locally Weighted Linear Regression')
+plt.legend()
+plt.gca().spines['top'].set_visible(False)
+plt.gca().spines['right'].set_visible(False)
+plt.savefig('WGT_MPG_LOWESS.png', bbox_inches='tight')
+plt.show()
+```
 
 <p align = 'center'>
   <img src='WGT_MPG_LOWESS.png'>
 </p>
 
-These models fit the data better than the normal linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. All three models appear similar, but lets highlight the gaussian kernel for further testing to demonstrate the importance of tuning the tau hyperparamter.
+These models fit the data better than the normal linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. All three models appear similar, but lets highlight the gaussian kernel for further testing to demonstrate the importance of tuning the tau hyperparamter. The following code and plot demonstrate how changing tau can impact the quality and fit of the model by adjusting the width of the neighborhoods and thus the size of the small linear regressions that compose the model.
+
+```Python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+cars = pd.read_csv('/content/cars.csv')
+x = np.array(cars['WGT'])
+y = np.array(cars['MPG'])
+gaussian1 = locally_weighted_linear_regression(x,y,'Gaussian',tau=1)
+gaussian10 = locally_weighted_linear_regression(x,y,'Gaussian',tau=10)
+gaussian100 = locally_weighted_linear_regression(x,y,'Gaussian',tau=100)
+gaussian500 = locally_weighted_linear_regression(x,y,'Gaussian',tau=500)
+
+plt.figure(figsize=[14,8])
+plt.scatter(cars['WGT'],cars['MPG'], color = 'gray', alpha=.5)
+plt.plot(x[np.argsort(x)][::-1],gaussian500[np.argsort(gaussian500)], linewidth = 3, alpha=.75, color = 'purple', label = 'Gaussian Kernel, tau=500')
+plt.plot(x[np.argsort(x)][::-1],gaussian100[np.argsort(gaussian100)], linewidth = 3, alpha=.75, color = 'black', label = 'Gaussian Kernel, tau=100')
+plt.plot(x[np.argsort(x)][::-1],gaussian10[np.argsort(gaussian10)], linewidth = 3, alpha=.75, color = 'orange', label = 'Gaussian Kernel, tau=10')
+plt.plot(x[np.argsort(x)][::-1],gaussian1[np.argsort(gaussian1)], linewidth = 3, alpha=.75, label = 'Gaussian Kernel, tau=1')
+plt.ylabel('Miles Per Gallon (mi)')
+plt.xlabel('Weight (lbs)')
+plt.title('Locally Weighted Linear Regression')
+plt.legend()
+plt.gca().spines['top'].set_visible(False)
+plt.gca().spines['right'].set_visible(False)
+plt.savefig('WGT_MPG_LOWESS.png', bbox_inches='tight')
+plt.show()
+```
