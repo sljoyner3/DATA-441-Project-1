@@ -172,3 +172,7 @@ plt.gca().spines['right'].set_visible(False)
 plt.savefig('WGT_MPG_LOWESS.png', bbox_inches='tight')
 plt.show()
 ```
+
+<p align = 'center'>
+  <img src='WGT_MPG_LOWESS-2.png'>
+</p>
