@@ -176,3 +176,5 @@ plt.show()
 <p align = 'center'>
   <img src='WGT_MPG_LOWESS-2.png'>
 </p>
+
+As tau increases, the model gets less fit to specific curve and shape of the data and becomes more general and closer to the standard linear regression model. This is not necessarily a bad thing, however, as with any data oriented project your model depends heavily on the context and the data and you want to avoid over or underfitting.
