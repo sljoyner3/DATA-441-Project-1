@@ -107,14 +107,10 @@ def Tricubic(x):
   return np.where(d>1,0,70/81*(1-d**3)**3)
 ```
 
-We can use this method to employee these three kernels with a specified value of tau. The three plots below show a locally weighted linear regression model for the car weight and mileage data from above for three different kernels. All three have a tau value of 1.
+We can use this method to employee these three kernels with a specified value of tau. The plot below shows the locally weighted linear regression for the car weight and mileage data from before. The gray dots represent the data, and each line represents a model using the specified kernel.
 
-<p>
-  <div class='row'>
-      <img src='WGT_MPG_Gaussian_tau_1.png' style='width: 33%' align='center'>
-      <img src='WGT_MPG_Epanechnikov_tau_1.png' style='width: 33%' align='center'>
-      <img src='WGT_MPG_Tricubic_tau_1.png' style='width: 33%' align='center'>
-  </div>
+<p align = 'center'>
+  <img src='WGT_MPG_LOWESS.png'>
 </p>
 
 Clearly, this model fits the data better than the standard linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. The ______ kernel appears to work best, so we can begin further testing and validation to tune our model.
