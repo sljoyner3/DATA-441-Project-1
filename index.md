@@ -177,4 +177,15 @@ plt.show()
   <img src='WGT_MPG_LOWESS-2.png'>
 </p>
 
-As tau increases, the model gets less fit to specific curve and shape of the data and becomes more general and closer to the standard linear regression model. This is not necessarily a bad thing, however, as with any data oriented project your model depends heavily on the context and the data and you want to avoid over or underfitting.
+Furthermore, we can also use SciKit Learn's mean squared error function to numerically compare the models.
+
+```Python
+from sklearn.metrics import mean_squared_error as mse
+
+print(mse(y,gaussian1))
+print(mse(y,gaussian10))
+print(mse(y,gaussian100))
+print(mse(y,gaussian500))
+```
+
+This code yields the following outputs: 4.0140561326113255, 13.714786141738632, 17.399647692514126, 57.37351262683244. The plot itself and these values both make it clear that as tau increases, so does the MSE since the neighborhoods get larger, and an increasingly linear model is being fit to nonlinear data. It is important to note, however, that this is not necessarily a bad thing as with any data oriented project your model depends heavily on the context and the data and you want to avoid over or underfitting. A model that is only validated with the data it is created with may have a really low MSE, but this could be a case of overfitting and the model may perform poorly on new, unseen data. To protect against this it is important to cross validate your model using a technique like k-fold cross validation.
