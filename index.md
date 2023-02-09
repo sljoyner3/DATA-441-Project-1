@@ -54,13 +54,61 @@ What locally weighted linear regression does is iterate over the data and for ev
 Having explained the math and concepts behind locally weighted linear regression, we can now begin to develop code to create models using this approach. The code below shows how to run these sets of small linear regressions to make the overall model using the weighted approach.
 
 ```Python
-import numpy as np
+def locally_weighted_linear_regression(x, y, kern='Gaussian', tau=0.05):
+    # Get input length and initialize output
+    n = len(x)
+    y_out = np.zeros(n)
+
+    # Call the given kernel, return if not one of these three options
+    # w is the weights matrix based on each points distance from
+    #   the current point x[i]
+    if kern == 'Gaussian':
+      w = np.array([Gaussian((x-x[i])/(2*tau)) for i in range(n)])   
+    elif kern == 'Epanechnikov':
+      w = np.array([Epanechnikov((x-x[i])/(2*tau)) for i in range(n)])  
+    elif kern == 'Tricubic':
+      w = np.array([Tricubic((x-x[i])/(2*tau)) for i in range(n)]) 
+    else:
+      print('Invalid Kernel.') 
+      return
+
+    # Iterate over every values and fit a linear regression model based
+    #   on the weights and update the output
+    for i in range(n):
+        weights = w[:, i]
+        lm = LinearRegression()
+        lm.fit(np.diag(w[:,i]).dot(x.reshape(-1,1)),np.diag(w[:,i]).dot(y.reshape(-1,1)))
+        y_out[i] = lm.predict(x[i].reshape(-1,1)) 
+
+    return y_out
+
+# Gaussian Kernel
+def Gaussian(x):
+  if len(x.shape)==1:
+    d = np.abs(x)
+  else:
+    d = np.sqrt(np.sum(x**2,axis=1))
+  return np.where(d>4,0,1/(np.sqrt(2*np.pi))*np.exp(-1/2*d**2))
+
+# Epanechnikov Kernel
+def Epanechnikov(x):
+  if len(x.shape)==1:
+    d = np.abs(x)
+  else:
+    d = np.sqrt(np.sum(x**2,axis=1))
+  return np.where(d>1,0,3/4*(1-d**2)) 
+
+# Tricubic Kernel
+def Tricubic(x):
+  if len(x.shape)==1:
+    d = np.abs(x)
+  else:
+    d = np.sqrt(np.sum(x**2,axis=1))
+  return np.where(d>1,0,70/81*(1-d**3)**3)
 ```
 
-From this code we can obtain the following fitted model, using the same data as before. The three plots below show a locally weighted linear regression model for the car weight and mileage data for three different kernels.
+We can use this method to employee these three kernels with a specified value of tau. The three plots below show a locally weighted linear regression model for the car weight and mileage data from above for three different kernels. All three have a tau value of 1.
 
-<p align='center'>
-  <b>Import plot/model with standard/reasonable parameters </b>
-</p>
+
 
 Clearly, this model fits the data better than the standard linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. The ______ kernel appears to work best, so we can begin further testing and validation to tune our model.
