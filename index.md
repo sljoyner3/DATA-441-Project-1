@@ -113,4 +113,4 @@ We can use this method to employee these three kernels with a specified value of
   <img src='WGT_MPG_LOWESS.png'>
 </p>
 
-Clearly, this model fits the data better than the standard linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. The ______ kernel appears to work best, so we can begin further testing and validation to tune our model.
+These models fit the data better than the normal linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. All three models appear similar, but lets highlight the gaussian kernel for further testing to demonstrate the importance of tuning the tau hyperparamter.
