@@ -9,7 +9,7 @@ Linear regression is a technique used to predict an output value given at least 
   <b>y</b> = <b>X&beta;</b>+<b>&epsilon;</b>
 </p>
 
-Where <b>y</b> is the vector of outputs, with <b>x</b> as the vector of inputs, <b>&beta;</b> as the weights vector, and <b>&epsilon;</b> as the random error for each prediction. An import assumption is that the error term is normally distributed with a mean of zero and standard deviation of one. With this assumption in hand, we can solve for <b>&beta;</b>: 
+Where <b>y</b> is the vector of outputs, <b>x</b> is the vector of inputs, <b>&beta;</b> is the vector of coefficients, and <b>&epsilon;</b> is the random error for each prediction. An import assumption is that the error term is normally distributed with a mean of zero and standard deviation of one. With this assumption, we can then solve for <b>&beta;</b>: 
 
 <p align="center">
   <b>X<sup>T</sup>y</b> = <b>X<sup>T</sup>X&beta;</b>+<b>X<sup>T</sup>&epsilon;</b> = <b>X<sup>T</sup>X&beta;</b>
@@ -17,17 +17,19 @@ Where <b>y</b> is the vector of outputs, with <b>x</b> as the vector of inputs, 
   <b>(X<sup>T</sup>X)<sup>-1</sup>X<sup>T</sup>y</b> = <b>&beta;</b>
 </p>
 
-Using this we can also plug <b>&beta;</b> back in to get a explicit formula for <b>y</b>, our predictions. As the name suggests, this technique works great for linear datasets. The following example shows the relationship between car weight and mileage, and the line in blue is a standard linear regression, done with the technqiue described above, that attempts to predict miles per gallon based off weight.
+Using this we can also plug <b>&beta;</b> back in to get a explicit formula for <b>y</b>, our predictions. As the name suggests, this technique works great for linear datasets. 
+
+The following example shows the relationship between car weight and mileage, and the line in blue is a standard linear regression, done with the technqiue described above, that attempts to predict miles per gallon based off weight.
 
 <p align="center">
 <img src='WGT_MPG_Linear_Regression-2.png'>
 </p>
 
-Linear regression does an decent job, but there is certainly room to improve this model, particularly with lower weights where the trend appears more quadratic rather than linear.
+We can see that linear regression does an decent job, but there is certainly room to improve this model as a straight line does not appear to capture the curvature in the data, particularly with lower car weights where the trend appears more quadratic than linear.
 
 ### Adding Weights to the Regression Equation
 
-To fit a better model to this data, we can employ <b>Locally Weighted Linear Regression (LOWESS)</b>, which is similar to the technique above, but allows for curvature by performing linear regression over very small portions of the data that collectively create a curved, better fit model. To do this, we now use a matrix of weights (more on this later) that determines how important values will be to the given prediction. To represent this mathematically, we begin with the same regression equation as before and then multiply by <b>W</b>, which is a matrix containing weights along the diagonal and zeros everywhere else: 
+To fit a better model to this data, we can employ <b>Locally Weighted Linear Regression (LOWESS)</b>, which is an extension of linear regression but allows for curvature in the model by performing linear regression over very small portions of the data to collectively create a nonlinear model across the entire dataset. To do this, we use a matrix of weights (more on this later) that determines how important values will be to the given prediction. Nearby values will have a relatively large weight, while those further away will have little to no impact. To represent this mathematically, we begin with the same regression equation as before and then multiply by <b>W</b>, which is a matrix containing weights along the diagonal and zeros everywhere else: 
 
 <p align="center">
   <b>Wy</b> = <b>WX&beta;</b>+<b>W&epsilon;</b>
@@ -37,7 +39,7 @@ To fit a better model to this data, we can employ <b>Locally Weighted Linear Reg
   <b>(X<sup>T</sup>WX)<sup>-1</sup>X<sup>T</sup>Wy</b> = <b>&beta;</b>
 </p>
 
-The obvious question becomes how to determine the proper weights, and this is done through kernels that determine the weights and a hyperparameter that specifies the width of the kernel. All of the points that have a nonzero weight make up a neighborhood, and from each neighborhood a linear regression is made, and all of these collectively make up the nonlinear model. Examples of kernels include the Gaussian, Epanechnikov, and Tricubic kernels, seen below.
+The obvious question becomes how to determine the ideal weights, and this is done through kernels that determine the weights and a hyperparameter, tau, that specifies the width of the kernel. These kernels are based off of mathematical models, and specify how nearby values should be weighted for a prediction. Examples of kernels include the Gaussian, Epanechnikov, and Tricubic kernels, seen below.
 
 <p>
   <div class='row'>
@@ -47,11 +49,11 @@ The obvious question becomes how to determine the proper weights, and this is do
   </div>
 </p>
 
-What locally weighted linear regression does is iterate over the data and for every point it applies the weights to nearby kernels, according to the choosen kernel and width, and creates the neighborhood that creates a small linear regression that combines with the others to create a nonlinear model.
+Locally weighted linear regression iterates over the data and for every point it applies the weights determined by the kernel to nearby datapoints, creating neighborhoods for which a small linear regression model will be made, and these small linear models are combined to make a larger, nonlinear model.
 
 ### Applying Weighted Linear Regression
 
-Having explained the math and concepts behind locally weighted linear regression, we can now begin to develop code to create models using this approach. The code below shows how to run these sets of small linear regressions to make the overall model using the weighted approach.
+Having explained the math and concepts behind locally weighted linear regression, we can now begin to develop code to create models using this approach. The code below shows how to run these sets of small linear regressions to make the overall model using the locally weighted linear regression approach.
 
 ```Python
 def locally_weighted_linear_regression(x, y, kern='Gaussian', tau=0.05):
@@ -73,7 +75,7 @@ def locally_weighted_linear_regression(x, y, kern='Gaussian', tau=0.05):
       return
 
     # Iterate over every values and fit a linear regression model based
-    #   on the weights and update the output
+    #   on the weighted data values and update the output
     for i in range(n):
         weights = w[:, i]
         lm = LinearRegression()
@@ -107,21 +109,26 @@ def Tricubic(x):
   return np.where(d>1,0,70/81*(1-d**3)**3)
 ```
 
-We can employee these three kernels to generate a new nonlinear model with a specified value of tau. The code below shows the use of the previous function and generation of the plot below, which shows the locally weighted linear regression for the car weight and mileage data from before. The gray dots represent the data, and each line represents a model using the specified kernel.
+The code below shows the use of the previous function and generation of the plot below, which shows the locally weighted linear regression for the car weight and mileage data from before. The gray dots represent the data, and each line represents a model using the specified kernel.
 
 ```Python
+# Imports
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
+# Read the data in and identify x and y
 cars = pd.read_csv('/content/cars.csv')
 x = np.array(cars['WGT'])
 y = np.array(cars['MPG'])
+
+# Run each model with the specified kernel
 gaussian = locally_weighted_linear_regression(x,y,'Gaussian',tau=1)
 epanenchnikov = locally_weighted_linear_regression(x,y,'Epanechnikov',tau=1)
 tricubic = locally_weighted_linear_regression(x,y,'Tricubic',tau=1)
 
+# Plot the results with matplotlib
 plt.figure(figsize=[14,8])
 plt.scatter(cars['WGT'],cars['MPG'], color = 'gray', alpha=.5)
 plt.plot(x[np.argsort(x)][::-1],tricubic[np.argsort(tricubic)], linewidth = 3, alpha=.75,color='red', label = 'Tricubic Kernel, tau=1')
@@ -141,22 +148,27 @@ plt.show()
   <img src='WGT_MPG_LOWESS.png'>
 </p>
 
-These models fit the data better than the normal linear regression model, and by adjusting our hyperparameters we can further test with and adapt the fit of the model to avoid over or underfitting. All three models appear similar, but lets highlight the gaussian kernel for further testing to demonstrate the importance of tuning the tau hyperparamter. The following code and plot demonstrate how changing tau can impact the quality and fit of the model by adjusting the width of the neighborhoods and thus the size of the small linear regressions that compose the model.
+Visually, these models fit the data better than the normal linear regression model we began with. By adjusting our hyperparameters we can further adjust the fit of the model. Lets continue with the Gaussian kernel to highlight the importance of tuning the tau parameter. The following code and plot demonstrate how changing tau can impact the quality and fit of the model by adjusting the width of the neighborhoods.
 
 ```Python
+# Imports
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
+# Read the data in and identify x and y
 cars = pd.read_csv('/content/cars.csv')
 x = np.array(cars['WGT'])
 y = np.array(cars['MPG'])
+
+# Run the model with the Gaussian kernel for each tau
 gaussian1 = locally_weighted_linear_regression(x,y,'Gaussian',tau=1)
 gaussian10 = locally_weighted_linear_regression(x,y,'Gaussian',tau=10)
 gaussian100 = locally_weighted_linear_regression(x,y,'Gaussian',tau=100)
 gaussian500 = locally_weighted_linear_regression(x,y,'Gaussian',tau=500)
 
+# Plot the results with matplotlib
 plt.figure(figsize=[14,8])
 plt.scatter(cars['WGT'],cars['MPG'], color = 'gray', alpha=.5)
 plt.plot(x[np.argsort(x)][::-1],gaussian500[np.argsort(gaussian500)], linewidth = 3, alpha=.75, color = 'purple', label = 'Gaussian Kernel, tau=500')
@@ -177,7 +189,7 @@ plt.show()
   <img src='WGT_MPG_LOWESS-2.png'>
 </p>
 
-Furthermore, we can also use SciKit Learn's mean squared error function to numerically compare the models.
+Furthermore, we can also use SciKitLearn's mean squared error function to numerically compare the models.
 
 ```Python
 from sklearn.metrics import mean_squared_error as mse
@@ -188,4 +200,6 @@ print(mse(y,gaussian100))
 print(mse(y,gaussian500))
 ```
 
-This code yields the following outputs: 4.0140561326113255, 13.714786141738632, 17.399647692514126, 57.37351262683244. The plot itself and these values both make it clear that as tau increases, so does the MSE since the neighborhoods get larger, and an increasingly linear model is being fit to nonlinear data. It is important to note, however, that this is not necessarily a bad thing as with any data oriented project your model depends heavily on the context and the data and you want to avoid over or underfitting. A model that is only validated with the data it is created with may have a really low MSE, but this could be a case of overfitting and the model may perform poorly on new, unseen data. To protect against this it is important to cross validate your model using a technique like k-fold cross validation.
+This code yields the following outputs: 4.0140561326113255, 13.714786141738632, 17.399647692514126, 57.37351262683244. These results confirm what was clear visually: increasing tau leads to a higher MSE for this dataset. This makes sense, as when tau increases the linear regressions get larger and eventually when tau becomes big enough the model will be the same as the standard linear regression model which had a poor fit for this data.
+
+It is important to note, however, that higher MSE is not necessarily a bad thing. As with any data oriented project your model depends heavily on the context and the data you are using. For example, even though the model with a tau of one had the lowest MSE, it may be overfit to the data and may perform worse than the models with tau equal to 10, 100, or even 500. It is always import to avoid over or underfitting a predictive model, and to protect against this it is important to cross validate your model using a technique like k-fold cross validation.
